@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic[email]
+sqlalchemy
+asyncpg
+python-dotenv
+psycopg2-binary
+pathlib
