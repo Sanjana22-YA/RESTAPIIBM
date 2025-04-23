@@ -1,7 +1,8 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 class AttendanceBase(BaseModel):
-    date: str
+    date: datetime
     status: str
 
     class Config:

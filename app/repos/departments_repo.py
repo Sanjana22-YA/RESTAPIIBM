@@ -1,20 +1,42 @@
-from sqlalchemy.orm import Session
-from models.department import Department 
-from schemas.departments_schema import DepartmentsCreate 
+from schemas.departments_schema import DepartmentUpdate, DepartmentsCreate
+from database import session
+from models.department import Department
+
 
 class DepartmentRepository:
-    def __init__(self, db: Session):
+    def __init__(self, db: session):
         self.db = db
 
-    def create_department(self, department: DepartmentsCreate) -> Department:
-        db_department = Department(
-            name=department.name,
-            description=department.description
-        )
-        self.db.add(db_department)
+    def get_all(self):
+        return self.db.query(Department).all()
+
+    def get_by_id(self, dept_id: int):
+        return self.db.query(Department).filter(Department.id == dept_id).first()
+    
+    def update_department(self, dept_id: int, dept_data: DepartmentUpdate):
+        dept = self.get_by_id(dept_id)
+        if not dept:
+            return None
+        for field, value in dept_data.dict().items():
+            setattr(dept, field, value)
         self.db.commit()
-        self.db.refresh(db_department)
-        return db_department
+        self.db.refresh(dept)
+        return dept
 
+    def create(self, dept: DepartmentsCreate):
+        new_dept = Department(
+            dname=dept.dname,
+            location=dept.location,
+            description=dept.description
+        )
+        self.db.add(new_dept)
+        self.db.commit()
+        self.db.refresh(new_dept)
+        return new_dept
 
-
+    def delete(self, dept_id: int):
+        dept = self.get_by_id(dept_id)
+        if dept:
+            self.db.delete(dept)
+            self.db.commit()
+        return dept

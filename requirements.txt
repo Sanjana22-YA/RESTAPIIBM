@@ -3,7 +3,11 @@ uvicorn[standard]
 pydantic
 pydantic[email]
 sqlalchemy
+python-jose[cryptography]
+cryptography
+bcrypt    
 asyncpg
+passlib[bcrypt]
 python-dotenv
 psycopg2-binary
 pathlib
